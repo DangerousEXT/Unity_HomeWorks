@@ -1,0 +1,46 @@
+{
+    "version": 1,
+    "name": "Cube Actions",
+    "maps": [
+        {
+            "name": "Cube",
+            "id": "8440689b-2587-46e2-b5b5-9a1bee373786",
+            "actions": [
+                {
+                    "name": "Throw",
+                    "type": "Button",
+                    "id": "e6ebe4af-31c4-489a-b761-d98df2d5c80a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "0e4056bc-52c6-43f2-9586-8495729f6120",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Throw",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e189fdc9-7d00-4165-96a0-2e5813ad321c",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Throw",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
