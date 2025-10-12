@@ -212,15 +212,10 @@ public class UI : MonoBehaviour
 
     private void OnReRollButtonClicked()
     {
-        // Reset cube positions before roll
         for (int i = 0; i < cubeSpawn.GetActiveCubes.Count; i++)
         {
             var cube = cubeSpawn.GetActiveCubes[i];
-            var position = new Vector3(
-                0f + i * 2f,
-                1f,
-                0f
-            );
+            var position = new Vector3(2f * i,0f,0f);
             cube.transform.position = position;
             cube.transform.rotation = Quaternion.identity;
             var rb = cube.GetComponent<Rigidbody>();

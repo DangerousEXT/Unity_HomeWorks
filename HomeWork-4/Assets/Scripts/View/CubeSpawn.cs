@@ -2,6 +2,7 @@
 using UnityEngine;
 
 
+
 public class CubeSpawn : MonoBehaviour
 {
     [SerializeField] private CubePool cubePool;

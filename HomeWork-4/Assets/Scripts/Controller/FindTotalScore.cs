@@ -6,16 +6,16 @@ public class FindTotalScore : MonoBehaviour
     [SerializeField] private FindUpperSide upperSide;
     public int GetTotalScore()
     {
-        var computedScore = 0;
+        var totalScore = 0;
         foreach (var cube in cubeSpawn.GetActiveCubes)
         {
             var staticCheck = cube.GetComponent<IsDiceStatic>();
             if (staticCheck.AtRest)
             {
                 int value = upperSide.GetUpperSide(cube.transform);
-                computedScore += value;
+                totalScore += value;
             }
         }
-        return computedScore;
+        return totalScore;
     }
 }
