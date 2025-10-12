@@ -35,6 +35,7 @@ public class CubePool : MonoBehaviour
         Initialize();
     }
 
+
     private void Initialize()
     {
         poolSize = 8;

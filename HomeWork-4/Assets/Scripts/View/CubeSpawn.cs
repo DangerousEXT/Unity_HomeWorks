@@ -16,10 +16,14 @@ public class CubeSpawn : MonoBehaviour
     {
         activeCubes = new List<GameObject>();
         cubeComponents = new Dictionary<GameObject, (ApplyForces, IsDiceStatic)>();
-        activeCubesCount = cubePool.GetActiveCubesCount();
+    }
+
+    private void Start()
+    {
         cubeModel.CubeQuantityChanged.AddListener(OnCubeQuantityChanged);
         cubePool.CubeSpawned += OnCubeSpawned;
         cubePool.CubeReturned += OnCubeReturned;
+        activeCubesCount = cubePool.GetActiveCubesCount();
         cubeQuantity = cubeModel.GetCubeQuantity;
         centreOfSpawnArea = Vector3.zero;
         spawnSpacing = 2f;
