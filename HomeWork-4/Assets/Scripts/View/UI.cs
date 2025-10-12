@@ -11,7 +11,6 @@ public class UI : MonoBehaviour
     [SerializeField] private TMP_Text minDrawText;
     [SerializeField] private TMP_Text minWinText;
     [SerializeField] private TMP_Text minLossText;
-    [SerializeField] private TMP_Text bindingDisplayText;
 
     [Header("Input Fields")]
     [SerializeField] private TMP_InputField inputCubeQuantity;
@@ -27,6 +26,7 @@ public class UI : MonoBehaviour
     [SerializeField] private CubeModel cubeModel;
     [SerializeField] private MoveLogic moveLogic;
     [SerializeField] private CubeSpawn cubeSpawn;
+    [SerializeField] private BindKey bindKey;
 
     private int minDraw;
     private int minWin;
@@ -47,7 +47,6 @@ public class UI : MonoBehaviour
         UpdateCubeQuantityDisplay(cubeModel.GetCubeQuantity);
         GenerateRandomThresholds();
         UpdateThresholdDisplay();
-        scoreText.text = "Ожидание броска...";
     }
 
     private void OnDestroy()
@@ -132,19 +131,16 @@ public class UI : MonoBehaviour
         {
             if (newValue <= minLoss)
             {
-                Debug.Log("Мин. для ничьей должно быть больше мин. для поражения");
                 inputMinDraw.text = minDraw.ToString();
                 return;
             }
             if (newValue >= minWin)
             {
-                Debug.Log("Мин. для ничьей должно быть меньше мин. для победы");
                 inputMinDraw.text = minDraw.ToString();
                 return;
             }
             if (newValue < 0)
             {
-                Debug.Log("Мин. для ничьей не может быть отрицательным");
                 inputMinDraw.text = minDraw.ToString();
                 return;
             }
@@ -229,8 +225,7 @@ public class UI : MonoBehaviour
 
     private void OnRebindButtonClicked()
     {
-        var bindKey = GetComponent<BindKey>();
         if (bindKey != null)
-            bindKey.StartRebind();
+            bindKey.OnRebind();
     }
 }

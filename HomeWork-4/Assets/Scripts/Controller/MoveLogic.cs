@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 public class MoveLogic : MonoBehaviour
 {
     [SerializeField] private CubeSpawn cubeSpawn;
-    [SerializeField] private FindUpperSide upperSide;
     [SerializeField] private FindTotalScore computedScore;
     public UnityEvent OnRollPerformed;
     public UnityEvent<int> OnAllCubesStopped;
@@ -17,7 +16,7 @@ public class MoveLogic : MonoBehaviour
         OnRollPerformed?.Invoke();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (AllCubesStopped())
         {
