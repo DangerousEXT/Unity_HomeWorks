@@ -15,7 +15,6 @@ using UnityEngine;
  * 4*) GetActiveCount - получили активные кубы. Проверка на необходимость доинициализации включена
  * Дополнение : алгоритм до смешного простой, но мои кривые руки + nullReference отовсюду...
  * Как итог : лучше бы я сделал обычный спавнер =0
- * Ввел события для отслеживания количества кубов, так показалось легче
  */
 public class CubePool : MonoBehaviour
 {
@@ -24,12 +23,15 @@ public class CubePool : MonoBehaviour
     private GameObject cubePrefab;
     private Stack<GameObject> cubePool;
     private int poolSize;
+    private List<GameObject> activeCubes;
     public event Action<GameObject> CubeSpawned;
     public event Action<GameObject> CubeReturned;
+
 
     private void Awake()
     {
         cubePrefab = cubeModel.GetCubePrefab();
+        activeCubes = new List<GameObject>();
         Initialize();
     }
 
@@ -57,6 +59,7 @@ public class CubePool : MonoBehaviour
         }
         var cube = cubePool.Pop();
         cube.SetActive(true);
+        activeCubes.Add(cube);
         CubeSpawned?.Invoke(cube);
         return cube;
     }
@@ -70,6 +73,7 @@ public class CubePool : MonoBehaviour
         }
         cubePool.Push(cube);
         cube.SetActive(false);
+        activeCubes.Remove(cube);
         CubeReturned?.Invoke(cube);
     }
 
@@ -85,4 +89,6 @@ public class CubePool : MonoBehaviour
         cubePool.Push(newCube);
         newCube.SetActive(false);
     }
+
+    public int GetActiveCubesCount() => activeCubes.Count;
 }

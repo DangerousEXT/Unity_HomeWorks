@@ -17,6 +17,7 @@ public class IsDiceStatic : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        StartCoroutine(CheckIfDiceStatic());
     }
 
     IEnumerator CheckIfDiceStatic()

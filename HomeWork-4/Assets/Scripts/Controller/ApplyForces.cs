@@ -17,6 +17,11 @@ public class ApplyForces : MonoBehaviour
         cubeModel.CubeForceChanged += OnCubeForceChanged;
         rigidBody = GetComponent<Rigidbody>();
     }
+    private void OnDestroy()
+    {
+        cubeModel.CubeTorqueChanged -= OnCubeTorqueChanged;
+        cubeModel.CubeForceChanged -= OnCubeForceChanged;
+    }
 
     public void ThrowCube()
     {

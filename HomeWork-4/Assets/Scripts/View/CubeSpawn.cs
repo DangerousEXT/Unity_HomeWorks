@@ -14,18 +14,19 @@ public class CubeSpawn : MonoBehaviour
     [SerializeField] private CubePool cubePool;
     [SerializeField] private CubeModel cubeModel;
     private int cubeQuantity;
+    private int activeCubesCount;
     private Vector3 centreOfSpawnArea;
     private float spawnSpacing;
-    private int activeCubesCount;
     private List<GameObject> activeCubes;
 
 
     void Awake()
     {
         activeCubes = new List<GameObject>();
+        activeCubesCount = cubePool.GetActiveCubesCount();
         cubeModel.CubeQuantityChanged += OnCubeQuantityChanged;
         cubePool.CubeSpawned += OnCubeSpawned;
-        cubePool.CubeReturned += OnCubeReturned;
+        cubePool.CubeReturned += OnCubeReturned;        
         cubeQuantity = cubeModel.GetCubeQuantity;
         centreOfSpawnArea = Vector3.zero;
         spawnSpacing = 2f;
@@ -49,7 +50,7 @@ public class CubeSpawn : MonoBehaviour
         if (cubeQuantity > activeCubesCount)
             SpawnCubes();
         else if (cubeQuantity < activeCubesCount)
-            DespawnExcessCubes();
+            DespawnExcessCubes();    
     }
 
 
@@ -72,7 +73,7 @@ public class CubeSpawn : MonoBehaviour
     {
         while (activeCubesCount > cubeQuantity)
         {
-            var cube = activeCubes[activeCubesCount - 1];
+            var cube = activeCubes[activeCubes.Count - 1];
             cubePool.ReturnCube(cube);
         }
     }
@@ -107,4 +108,6 @@ public class CubeSpawn : MonoBehaviour
         );
         cube.transform.position = position;
     }
+
+    public List<GameObject> GetActiveCubes => activeCubes;
 }

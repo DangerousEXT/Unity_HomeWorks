@@ -6,17 +6,15 @@ using UnityEngine.Events;
  * 1) Все параметры куба (скорость, вращение, position, cubeQuantity...)
  * 2) Т.к это все приватное, то обернуть в гет-сеттеры
  * 3) Написать event'ы, на которые подпишутся вьюшки
+ * 4) Подразумевается, что кубов от 2 до 20, а физ.величины от 1 до 15
  */
 
 public class CubeModel : MonoBehaviour
 {
     [SerializeField] private GameObject cubePrefab;
-    [Range(4, 16)]
-    [SerializeField] private int cubeQuantity;
-    [Range(0f, 15f)]
-    [SerializeField] private float cubeTorque;
-    [Range(0f, 15f)]
-    [SerializeField] private float cubeForce;
+    private int cubeQuantity = 4;
+    private float cubeTorque = 500f;
+    private float cubeForce = 100f;
 
     public event Action<int> CubeQuantityChanged;
     public event Action<float> CubeTorqueChanged;
@@ -40,7 +38,7 @@ public class CubeModel : MonoBehaviour
         {
             if (cubeQuantity != value)
             {
-                cubeQuantity = value;
+                cubeQuantity = Mathf.Clamp(value, 2, 20);
                 CubeQuantityChanged?.Invoke(cubeQuantity);
             }
         }
@@ -53,7 +51,7 @@ public class CubeModel : MonoBehaviour
         {
             if (cubeTorque != value)
             {
-                cubeTorque = value;
+                cubeTorque = Mathf.Clamp(value, 0f, 15f);
                 CubeTorqueChanged?.Invoke(cubeTorque);
             }
         }
@@ -66,7 +64,7 @@ public class CubeModel : MonoBehaviour
         {
             if (cubeForce != value)
             {
-                cubeForce = value;
+                cubeForce = Mathf.Clamp(value, 0f, 15f);
                 CubeForceChanged?.Invoke(cubeForce);
             }
         }
