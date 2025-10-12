@@ -1,16 +1,21 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class FindTotalScore : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] private CubeSpawn cubeSpawn;
+    [SerializeField] private FindUpperSide upperSide;
+    public int GetTotalScore()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        var computedScore = 0;
+        foreach (var cube in cubeSpawn.GetActiveCubes)
+        {
+            var staticCheck = cube.GetComponent<IsDiceStatic>();
+            if (staticCheck.AtRest)
+            {
+                int value = upperSide.GetUpperSide(cube.transform);
+                computedScore += value;
+            }
+        }
+        return computedScore;
     }
 }

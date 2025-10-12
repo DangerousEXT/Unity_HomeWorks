@@ -1,13 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-/*
- * Написать комм
- * 
- * 
- * 
- * 
- */
 
 public class CubeSpawn : MonoBehaviour
 {
@@ -18,15 +11,16 @@ public class CubeSpawn : MonoBehaviour
     private Vector3 centreOfSpawnArea;
     private float spawnSpacing;
     private List<GameObject> activeCubes;
-
+    private Dictionary<GameObject, (ApplyForces applyForces, IsDiceStatic isDiceStatic)> cubeComponents;
 
     void Awake()
     {
         activeCubes = new List<GameObject>();
+        cubeComponents = new Dictionary<GameObject, (ApplyForces, IsDiceStatic)>();
         activeCubesCount = cubePool.GetActiveCubesCount();
-        cubeModel.CubeQuantityChanged += OnCubeQuantityChanged;
+        cubeModel.CubeQuantityChanged.AddListener(OnCubeQuantityChanged);
         cubePool.CubeSpawned += OnCubeSpawned;
-        cubePool.CubeReturned += OnCubeReturned;        
+        cubePool.CubeReturned += OnCubeReturned;
         cubeQuantity = cubeModel.GetCubeQuantity;
         centreOfSpawnArea = Vector3.zero;
         spawnSpacing = 2f;
@@ -40,7 +34,7 @@ public class CubeSpawn : MonoBehaviour
 
     private void OnDestroy()
     {
-        cubeModel.CubeQuantityChanged -= OnCubeQuantityChanged;
+        cubeModel.CubeQuantityChanged.RemoveListener(OnCubeQuantityChanged);
         cubePool.CubeReturned -= OnCubeReturned;
         cubePool.CubeSpawned -= OnCubeSpawned;
     }
@@ -50,9 +44,8 @@ public class CubeSpawn : MonoBehaviour
         if (cubeQuantity > activeCubesCount)
             SpawnCubes();
         else if (cubeQuantity < activeCubesCount)
-            DespawnExcessCubes();    
+            DespawnExcessCubes();
     }
-
 
     private void SpawnCubes()
     {
@@ -61,13 +54,12 @@ public class CubeSpawn : MonoBehaviour
             var cube = cubePool.GetCube();
             if (cube == null)
             {
-                Debug.Log("из пула подтянулся null");
+                Debug.Log("Не удалось получить куб из пула");
                 return;
             }
             PositionCubeInLine(cube, activeCubesCount);
         }
     }
-
 
     private void DespawnExcessCubes()
     {
@@ -78,18 +70,20 @@ public class CubeSpawn : MonoBehaviour
         }
     }
 
-
     private void OnCubeSpawned(GameObject cube)
     {
         activeCubesCount++;
         activeCubes.Add(cube);
+        var applyForces = cube.GetComponent<ApplyForces>();
+        var isDiceStatic = cube.GetComponent<IsDiceStatic>();
+        cubeComponents[cube] = (applyForces, isDiceStatic);
     }
-
 
     private void OnCubeReturned(GameObject cube)
     {
         activeCubesCount--;
         activeCubes.Remove(cube);
+        cubeComponents.Remove(cube);
     }
 
     private void OnCubeQuantityChanged(int newQuantity)
@@ -97,7 +91,6 @@ public class CubeSpawn : MonoBehaviour
         cubeQuantity = newQuantity;
         AdjustCubeCount();
     }
-
 
     private void PositionCubeInLine(GameObject cube, int indexOfCube)
     {
@@ -110,4 +103,9 @@ public class CubeSpawn : MonoBehaviour
     }
 
     public List<GameObject> GetActiveCubes => activeCubes;
+
+    public (ApplyForces applyForces, IsDiceStatic isDiceStatic) GetCubeComponents(GameObject cube)
+    {
+        return cubeComponents[cube];
+    }
 }

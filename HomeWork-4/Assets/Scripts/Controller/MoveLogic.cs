@@ -1,34 +1,50 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class MoveLogic : MonoBehaviour
 {
-    [SerializeField] private ApplyForces applyForces;
-    [SerializeField] private IsDiceBottom isBottom;
-    [SerializeField] private IsDiceStatic isStatic;
     [SerializeField] private CubeSpawn cubeSpawn;
     [SerializeField] private FindUpperSide upperSide;
+    [SerializeField] private FindTotalScore computedScore;
+    public UnityEvent OnRollPerformed;
+    public UnityEvent<int> OnAllCubesStopped;
 
     public void Roll(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
-        else
-            applyForces.ThrowCube();
+        RollAllDice();
+        OnRollPerformed?.Invoke();
     }
 
-    public int GetTotalScore()
+    private void Update()
     {
-        var total = 0;
+        if (AllCubesStopped())
+        {
+            var totalScore = computedScore.GetTotalScore();
+            OnAllCubesStopped?.Invoke(totalScore);
+        }
+    }
+
+    private void RollAllDice()
+    {
         foreach (var cube in cubeSpawn.GetActiveCubes)
         {
-            if (isStatic && isBottom)
+            var (applyForces, _) = cubeSpawn.GetCubeComponents(cube);
+            applyForces.ThrowCube();
+        }
+    }
+
+    private bool AllCubesStopped()
+    {
+        foreach (var cube in cubeSpawn.GetActiveCubes)
+        {
+            var (_, isDiceStatic) = cubeSpawn.GetCubeComponents(cube);
+            if (!isDiceStatic.AtRest)
             {
-                var value = upperSide.GetUpperSide(cube.transform);
-                total += value;
-                Debug.Log($"[DiceGameController] {cube.name}: {value}");
+                return false;
             }
         }
-        Debug.Log($"[DiceGameController] Общий счёт: {total}");
-        return total;
+        return true;
     }
 }

@@ -13,12 +13,12 @@ public class CubeModel : MonoBehaviour
 {
     [SerializeField] private GameObject cubePrefab;
     private int cubeQuantity = 4;
-    private float cubeTorque = 500f;
-    private float cubeForce = 100f;
+    private float cubeTorque = 2f;
+    private float cubeForce = 4f;
 
-    public event Action<int> CubeQuantityChanged;
-    public event Action<float> CubeTorqueChanged;
-    public event Action<float> CubeForceChanged;
+    public UnityEvent<int> CubeQuantityChanged;
+    public UnityEvent<float> CubeTorqueChanged;
+    public UnityEvent<float> CubeForceChanged;
 
     public GameObject GetCubePrefab()
     {

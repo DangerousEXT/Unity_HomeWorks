@@ -10,7 +10,7 @@ using UnityEngine;
 public class IsDiceStatic : MonoBehaviour
 {
     public bool AtRest { get; private set;}
-    private const float velocityThreshold = 0.000001f;
+    private const float velocityThreshold = 0.01f;
     private Rigidbody rb;
     [SerializeField] private IsDiceBottom bottom;
 

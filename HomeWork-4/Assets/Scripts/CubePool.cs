@@ -86,6 +86,9 @@ public class CubePool : MonoBehaviour
     private void CreateNewCube()
     {
         var newCube = Instantiate(cubePrefab);
+        var forces = newCube.GetComponent<ApplyForces>();
+        if (forces != null)
+            forces.Init(cubeModel);
         cubePool.Push(newCube);
         newCube.SetActive(false);
     }
