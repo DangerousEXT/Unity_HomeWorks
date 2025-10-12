@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 /*
  * Проблема : destroy / instantiate очень затратные операции, в update напостоянку вызывать бо-бо + GC даст прикурить.
  * Решение : Object pool (в юнити есть built-in, но стоит реализовать самому)
@@ -24,8 +25,8 @@ public class CubePool : MonoBehaviour
     private Stack<GameObject> cubePool;
     private int poolSize;
     private List<GameObject> activeCubes;
-    public event Action<GameObject> CubeSpawned;
-    public event Action<GameObject> CubeReturned;
+    public UnityEvent<GameObject> CubeSpawned;
+    public UnityEvent<GameObject> CubeReturned;
 
 
     private void Awake()

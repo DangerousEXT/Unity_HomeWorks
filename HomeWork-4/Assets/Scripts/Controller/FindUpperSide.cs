@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-
+//Захардкожено =(. Ваш вариант с гранями был прикольный.
 public class FindUpperSide : MonoBehaviour
 {
     public int GetUpperSide(Transform cubeTransform)

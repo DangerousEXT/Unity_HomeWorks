@@ -23,7 +23,7 @@ public class IsDiceStatic : MonoBehaviour
         StartCoroutine(CheckIfDiceStatic());
     }
 
-    IEnumerator CheckIfDiceStatic()
+    IEnumerator CheckIfDiceStatic() //Старался написать что-то пооптимизированнее
     {
         while (true)
         {

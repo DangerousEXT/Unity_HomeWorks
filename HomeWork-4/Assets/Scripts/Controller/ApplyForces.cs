@@ -17,15 +17,6 @@ public class ApplyForces : MonoBehaviour
         cubeModel.CubeForceChanged.AddListener(OnCubeForceChanged);
     }
 
-    private void OnDestroy()
-    {
-        if (cubeModel != null)
-        {
-            cubeModel.CubeTorqueChanged.RemoveListener(OnCubeTorqueChanged);
-            cubeModel.CubeForceChanged.RemoveListener(OnCubeForceChanged);
-        }
-    }
-
     public void ThrowCube()
     {
         Vector3 torqueDir = new Vector3(

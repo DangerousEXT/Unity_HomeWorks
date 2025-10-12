@@ -21,8 +21,8 @@ public class CubeSpawn : MonoBehaviour
     private void Start()
     {
         cubeModel.CubeQuantityChanged.AddListener(OnCubeQuantityChanged);
-        cubePool.CubeSpawned += OnCubeSpawned;
-        cubePool.CubeReturned += OnCubeReturned;
+        cubePool.CubeSpawned.AddListener(OnCubeSpawned);
+        cubePool.CubeReturned.AddListener(OnCubeReturned);
         activeCubesCount = cubePool.GetActiveCubesCount();
         cubeQuantity = cubeModel.GetCubeQuantity;
         centreOfSpawnArea = Vector3.zero;
@@ -33,13 +33,6 @@ public class CubeSpawn : MonoBehaviour
     void Update()
     {
         AdjustCubeCount();
-    }
-
-    private void OnDestroy()
-    {
-        cubeModel.CubeQuantityChanged.RemoveListener(OnCubeQuantityChanged);
-        cubePool.CubeReturned -= OnCubeReturned;
-        cubePool.CubeSpawned -= OnCubeSpawned;
     }
 
     private void AdjustCubeCount()
@@ -95,7 +88,7 @@ public class CubeSpawn : MonoBehaviour
         AdjustCubeCount();
     }
 
-    private void PositionCubeInLine(GameObject cube, int indexOfCube)
+    public void PositionCubeInLine(GameObject cube, int indexOfCube)
     {
         var position = new Vector3(
             centreOfSpawnArea.x + indexOfCube * spawnSpacing,

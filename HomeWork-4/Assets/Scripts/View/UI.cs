@@ -42,25 +42,10 @@ public class UI : MonoBehaviour
         inputMinWin.onEndEdit.AddListener(OnInputMinWin);
         inputMinLoss.onEndEdit.AddListener(OnInputMinLoss);
         reRollButton.onClick.AddListener(OnReRollButtonClicked);
-        if (rebindButton != null)
-            rebindButton.onClick.AddListener(OnRebindButtonClicked);
+        rebindButton.onClick.AddListener(OnRebindButtonClicked);
         UpdateCubeQuantityDisplay(cubeModel.GetCubeQuantity);
         GenerateRandomThresholds();
         UpdateThresholdDisplay();
-    }
-
-    private void OnDestroy()
-    {
-        cubeModel.CubeQuantityChanged.RemoveListener(OnCubeQuantityChanged);
-        moveLogic.OnRollPerformed.RemoveListener(OnRollPerformed);
-        moveLogic.OnAllCubesStopped.RemoveListener(OnAllCubesStopped);
-        inputCubeQuantity.onEndEdit.RemoveListener(OnInputCubeQuantity);
-        inputMinDraw.onEndEdit.RemoveListener(OnInputMinDraw);
-        inputMinWin.onEndEdit.RemoveListener(OnInputMinWin);
-        inputMinLoss.onEndEdit.RemoveListener(OnInputMinLoss);
-        reRollButton.onClick.RemoveListener(OnReRollButtonClicked);
-        if (rebindButton != null)
-            rebindButton.onClick.RemoveListener(OnRebindButtonClicked);
     }
 
     private void OnRollPerformed()
@@ -82,13 +67,13 @@ public class UI : MonoBehaviour
         UpdateThresholdDisplay();
     }
 
-    private void UpdateCubeQuantityDisplay(int quantity)
+    private void UpdateCubeQuantityDisplay(int quantity) //Вынести в контрол часть
     {
         cubeQuantityText.text = $"Число кубиков: {quantity}";
         inputCubeQuantity.text = quantity.ToString();
     }
 
-    private void GenerateRandomThresholds()
+    private void GenerateRandomThresholds() //Вынести в контрол часть
     {
         int maxScore = cubeModel.GetCubeQuantity * 6;
         minLoss = Random.Range(1, maxScore / 3);
@@ -96,7 +81,7 @@ public class UI : MonoBehaviour
         minWin = Random.Range(minDraw + 1, maxScore);
     }
 
-    private void UpdateThresholdDisplay()
+    private void UpdateThresholdDisplay() //Вынести в контрол часть
     {
         minLossText.text = $"Мин. для поражения: {minLoss}";
         minDrawText.text = $"Мин. для ничьей: {minDraw}";
@@ -112,17 +97,13 @@ public class UI : MonoBehaviour
         {
             if (newValue < 2 || newValue > 20)
             {
-                Debug.Log("Число кубиков должно быть от 2 до 20");
                 inputCubeQuantity.text = cubeModel.GetCubeQuantity.ToString();
                 return;
             }
             cubeModel.GetCubeQuantity = newValue;
         }
         else
-        {
-            Debug.Log("Некорректное число кубиков");
             inputCubeQuantity.text = cubeModel.GetCubeQuantity.ToString();
-        }
     }
 
     private void OnInputMinDraw(string value)
@@ -148,10 +129,7 @@ public class UI : MonoBehaviour
             UpdateThresholdDisplay();
         }
         else
-        {
-            Debug.Log("Некорректное значение для мин. ничьей");
             inputMinDraw.text = minDraw.ToString();
-        }
     }
 
     private void OnInputMinWin(string value)
@@ -160,13 +138,11 @@ public class UI : MonoBehaviour
         {
             if (newValue <= minDraw)
             {
-                Debug.Log("Мин. для победы должно быть больше мин. для ничьей");
                 inputMinWin.text = minWin.ToString();
                 return;
             }
             if (newValue < 0)
             {
-                Debug.Log("Мин. для победы не может быть отрицательным");
                 inputMinWin.text = minWin.ToString();
                 return;
             }
@@ -174,10 +150,7 @@ public class UI : MonoBehaviour
             UpdateThresholdDisplay();
         }
         else
-        {
-            Debug.Log("Некорректное значение для мин. победы");
             inputMinWin.text = minWin.ToString();
-        }
     }
 
     private void OnInputMinLoss(string value)
@@ -186,13 +159,11 @@ public class UI : MonoBehaviour
         {
             if (newValue >= minDraw)
             {
-                Debug.Log("Мин. для поражения должно быть меньше мин. для ничьей");
                 inputMinLoss.text = minLoss.ToString();
                 return;
             }
             if (newValue < 0)
             {
-                Debug.Log("Мин. для поражения не может быть отрицательным");
                 inputMinLoss.text = minLoss.ToString();
                 return;
             }
@@ -200,13 +171,10 @@ public class UI : MonoBehaviour
             UpdateThresholdDisplay();
         }
         else
-        {
-            Debug.Log("Некорректное значение для мин. поражения");
             inputMinLoss.text = minLoss.ToString();
-        }
     }
 
-    private void OnReRollButtonClicked()
+    private void OnReRollButtonClicked() //повторяет логику спавнера, нужен рефактор в будущем
     {
         for (int i = 0; i < cubeSpawn.GetActiveCubes.Count; i++)
         {
