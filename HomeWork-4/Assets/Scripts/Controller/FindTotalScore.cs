@@ -12,7 +12,7 @@ public class FindTotalScore : MonoBehaviour
             var staticCheck = cube.GetComponent<IsDiceStatic>(); // -_-. Вроде бы не так критично, т.к обложено в fixUpd проверкой
             if (staticCheck.AtRest)
             {
-                int value = upperSide.GetUpperSide(cube.transform);
+                var value = upperSide.GetUpperSide(cube.transform);
                 totalScore += value;
             }
         }

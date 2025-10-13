@@ -19,14 +19,14 @@ public class ApplyForces : MonoBehaviour
 
     public void ThrowCube()
     {
-        Vector3 torqueDir = new Vector3(
+        var torqueDir = new Vector3(
             Random.Range(-cubeTorque, cubeTorque),
             Random.Range(-cubeTorque, cubeTorque),
             Random.Range(-cubeTorque, cubeTorque)
         );
         rb.AddTorque(torqueDir, ForceMode.Impulse);
 
-        Vector3 forceDir = new Vector3(
+        var forceDir = new Vector3(
             Random.Range(-cubeForce, cubeForce),
             Random.Range(cubeForce, cubeForce),
             Random.Range(-cubeForce, cubeForce)
