@@ -1,4 +1,5 @@
 ﻿using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -38,9 +39,9 @@ public class UI : MonoBehaviour
         moveLogic.OnRollPerformed.AddListener(OnRollPerformed);
         moveLogic.OnAllCubesStopped.AddListener(OnAllCubesStopped);
         inputCubeQuantity.onEndEdit.AddListener(OnInputCubeQuantity);
-        inputMinDraw.onEndEdit.AddListener(OnInputMinDraw);
-        inputMinWin.onEndEdit.AddListener(OnInputMinWin);
-        inputMinLoss.onEndEdit.AddListener(OnInputMinLoss);
+        inputMinDraw.onEndEdit.AddListener(value => OnInputWinType(WinType.Draw, value));
+        inputMinWin.onEndEdit.AddListener(value => OnInputWinType(WinType.Win, value));
+        inputMinLoss.onEndEdit.AddListener(value => OnInputWinType(WinType.Lose, value));
         reRollButton.onClick.AddListener(OnReRollButtonClicked);
         rebindButton.onClick.AddListener(OnRebindButtonClicked);
         UpdateCubeQuantityDisplay(cubeModel.GetCubeQuantity);
@@ -55,7 +56,7 @@ public class UI : MonoBehaviour
 
     private void OnAllCubesStopped(int totalScore)
     {
-        string result = totalScore >= minWin ? "Победа!" :
+        var result = totalScore >= minWin ? "Победа!" :
                         totalScore >= minDraw ? "Ничья" : "Поражение";
         scoreText.text = $"Выпавшее значение: {totalScore} ({result})";
     }
@@ -75,7 +76,7 @@ public class UI : MonoBehaviour
 
     private void GenerateRandomThresholds() //Вынести в контрол часть
     {
-        int maxScore = cubeModel.GetCubeQuantity * 6;
+        var maxScore = cubeModel.GetCubeQuantity * 6;
         minLoss = Random.Range(1, maxScore / 3);
         minDraw = Random.Range(minLoss + 1, maxScore * 2 / 3);
         minWin = Random.Range(minDraw + 1, maxScore);
@@ -106,72 +107,37 @@ public class UI : MonoBehaviour
             inputCubeQuantity.text = cubeModel.GetCubeQuantity.ToString();
     }
 
-    private void OnInputMinDraw(string value)
+    private void OnInputWinType(WinType type, string value)
     {
-        if (int.TryParse(value, out int newValue))
+        int.TryParse(value, out var newValue);
+        switch (type)
         {
-            if (newValue <= minLoss)
-            {
-                inputMinDraw.text = minDraw.ToString();
-                return;
-            }
-            if (newValue >= minWin)
-            {
-                inputMinDraw.text = minDraw.ToString();
-                return;
-            }
-            if (newValue < 0)
-            {
-                inputMinDraw.text = minDraw.ToString();
-                return;
-            }
-            minDraw = newValue;
-            UpdateThresholdDisplay();
+            case WinType.Lose:
+                if (newValue >= minDraw)
+                {
+                    inputMinLoss.text = minLoss.ToString();
+                    return;
+                }
+                minLoss = newValue;
+                break;
+            case WinType.Draw:
+                if (newValue <= minLoss || newValue >= minWin)
+                {
+                    inputMinDraw.text = minDraw.ToString();
+                    return;
+                }
+                minDraw = newValue;
+                break;
+            case WinType.Win:
+                if (newValue <= minDraw)
+                {
+                    inputMinWin.text = minWin.ToString();
+                    return;
+                }
+                minWin = newValue;
+                break;
         }
-        else
-            inputMinDraw.text = minDraw.ToString();
-    }
-
-    private void OnInputMinWin(string value)
-    {
-        if (int.TryParse(value, out int newValue))
-        {
-            if (newValue <= minDraw)
-            {
-                inputMinWin.text = minWin.ToString();
-                return;
-            }
-            if (newValue < 0)
-            {
-                inputMinWin.text = minWin.ToString();
-                return;
-            }
-            minWin = newValue;
-            UpdateThresholdDisplay();
-        }
-        else
-            inputMinWin.text = minWin.ToString();
-    }
-
-    private void OnInputMinLoss(string value)
-    {
-        if (int.TryParse(value, out int newValue))
-        {
-            if (newValue >= minDraw)
-            {
-                inputMinLoss.text = minLoss.ToString();
-                return;
-            }
-            if (newValue < 0)
-            {
-                inputMinLoss.text = minLoss.ToString();
-                return;
-            }
-            minLoss = newValue;
-            UpdateThresholdDisplay();
-        }
-        else
-            inputMinLoss.text = minLoss.ToString();
+        UpdateThresholdDisplay();
     }
 
     private void OnReRollButtonClicked() //повторяет логику спавнера, нужен рефактор в будущем
